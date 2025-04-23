@@ -12,7 +12,7 @@ const axios = require("axios");
   const usernameInput = "L445837@GMAIL.COM";
   const passwordInput = "d2m-eapqrUFH+GK";
   const appointmentId = "65949358";
-  const retryTimeout = 40 * 1000;
+  const retryTimeout = 10 * 1000;
   const consularId = args.c;
   const userToken = args.n;
   const groupAppointment = args.g;
@@ -138,10 +138,23 @@ const axios = require("axios");
 
   async function runLogic() {
     //#region Init puppeteer
-    const browser = await puppeteer.launch({ headless: false });
+    const browser = await puppeteer.launch({
+      headless: "new",
+      args: [
+        '--disable-gpu',
+        '--disable-dev-shm-usage',
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage'
+      ]
+    });
     // Comment above line and uncomment following line to see puppeteer in action
     //const browser = await puppeteer.launch({ headless: false });
-    const page = await browser.newPage();
+    const context = await browser.createIncognitoBrowserContext();
+const page = await context.newPage();
+await page.setUserAgent(
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+);
     const timeout = 5000;
     const navigationTimeout = 60000;
     const smallTimeout = 100;
